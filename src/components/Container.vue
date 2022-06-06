@@ -1,5 +1,7 @@
 <template>
   <el-container class="fm2-container">
+    <control-board @clickSave="handleSaveStep" @clickLoad="handleLoadSteps" />
+    <steps-viewer @refreshPanel="handleRefreshPanel" />
     <el-main class="fm2-main">
       <el-container>
         <el-aside width="250px">
@@ -91,7 +93,11 @@
             </template>
           </div>
         </el-aside>
-        <el-container class="center-container" direction="vertical">
+        <el-container
+          class="center-container"
+          direction="vertical"
+          v-loading="isLoading"
+        >
           <el-header class="btn-bar" style="height: 45px">
             <slot name="action"></slot>
 
@@ -262,13 +268,13 @@
         </cus-dialog>
       </el-container>
     </el-main>
-    <el-footer height="30px" style="font-weight: 600">
-      copyright @2022
-    </el-footer>
+    <el-footer> </el-footer>
   </el-container>
 </template>
 
 <script>
+import ControlBoard from "./ControlBoard";
+import StepsViewer from "./StepsViewer";
 import Draggable from "vuedraggable";
 import WidgetConfig from "./WidgetConfig";
 import FormConfig from "./FormConfig";
@@ -288,10 +294,13 @@ import copyText from "../util/copy";
 import "brace/index";
 import "brace/mode/json";
 import "brace/mode/html";
+import { mapActions } from "vuex";
 
 export default {
   name: "fm-making-form",
   components: {
+    ControlBoard,
+    StepsViewer,
     Draggable,
     WidgetConfig,
     FormConfig,
@@ -395,20 +404,22 @@ export default {
       jsonCopyValue: "",
       jsonClipboard: null,
       jsonEg: `{
-  "list": [],
-  "config": {
-    "labelWidth": 100,
-    "labelPosition": "top",
-    "size": "small"
-  }
-}`,
+        "list": [],
+        "config": {
+          "labelWidth": 100,
+          "labelPosition": "top",
+          "size": "small"
+        }
+      }`,
       codeActiveName: "vue",
+      isLoading: false,
     };
   },
   mounted() {
     this._loadComponents();
   },
   methods: {
+    ...mapActions("steps", ["saveStep", "loadForm"]),
     _loadComponents() {
       this.basicComponents = this.basicComponents.map((item) => {
         return {
@@ -446,11 +457,10 @@ export default {
       return true;
     },
     handlePreview() {
-      // 没控制必须正则
       try {
         new RegExp(this.data.options.pattern);
       } catch (e) {
-        console.log("无效正则");
+        console.log("Error in preview");
       }
       console.log(this.widgetForm);
       this.previewVisible = true;
@@ -480,6 +490,16 @@ export default {
         this.jsonCopyValue = JSON.stringify(this.widgetForm);
       });
     },
+    handleSaveStep() {
+      const payload = {
+        ...this.$store.state.steps.editngStep,
+        introduction: JSON.stringify(this.widgetForm),
+      };
+      this.saveStep(payload);
+    },
+    handleLoadSteps(id) {
+      this.loadForm(id);
+    },
     copyJsonDataHandler() {
       const cpSuccess = copyText(this.jsonCopyValue);
       if (cpSuccess) {
@@ -497,6 +517,20 @@ export default {
       try {
         this.setJSON(JSON.parse(this.uploadEditor.getValue()));
         this.uploadVisible = false;
+      } catch (e) {
+        this.$message.error(e.message);
+        this.$refs.uploadJson.end();
+      }
+    },
+    handleRefreshPanel(data) {
+      try {
+        this.isLoading = true;
+
+        setTimeout(() => {
+          this.isLoading = false;
+          this.setJSON(JSON.parse(data));
+          this.uploadVisible = false;
+        }, 1000);
       } catch (e) {
         this.$message.error(e.message);
         this.$refs.uploadJson.end();
@@ -535,10 +569,8 @@ export default {
     handleCopyCode(flag) {
       let code = "";
       if (flag) {
-        // 未预览时直接生成表单代码后复制
         code = genFormCode(this.widgetForm, this.widgetModels);
       } else {
-        // 预览时复制已生成过的代码
         code = decodeURIComponent(this.$refs.codeRunRef.code);
       }
       const cpSuccess = copyText(code);
@@ -551,7 +583,7 @@ export default {
     widgetForm: {
       deep: true,
       handler: function (val) {
-        console.log(this.$refs.widgetForm);
+        // console.log(this.$refs.widgetForm);
       },
     },
     $lang: function (val) {

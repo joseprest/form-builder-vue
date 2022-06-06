@@ -1,7 +1,7 @@
 /**
- * @author: giscafer ,https://github.com/giscafer
- * @date: 2020-05-03 00:41:10
- * @description: 动态生成表单源码
+ * @author: joseprest ,https://github.com/joseprest
+ * @date: 2022-06-03 00:41:10
+ * @description:
  */
 
 import { DATA_MODEL, FORM_MODEL } from "./constant";
@@ -84,12 +84,11 @@ export default function genFormCode(data, value) {
 }
 
 /**
- * 解决JSON.stringify 对字符串转义、不支持转换正则的问题
  * @param {*} str
  */
 function strToRegExp(str) {
   const reg1 = /("pattern":)(.*?)((",)|(" ,))/g;
-  const reg2 = /"([^"]*)"/g; // 替换双引号
+  const reg2 = /"([^"]*)"/g;
   let result = str,
     regArr1,
     regArr2;
@@ -128,7 +127,6 @@ function generateModel(genList, value) {
           models[genList[i].model] = genList[i].options.defaultValue;
         }
       }
-      // 每个 widget 的 model
       dataModel[genList[i].model] = models[genList[i].model];
 
       if (rules[genList[i].model]) {

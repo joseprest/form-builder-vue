@@ -1,4 +1,4 @@
-import { DATA_MODEL, FORM_MODEL } from './constant';
+import { DATA_MODEL, FORM_MODEL } from "./constant";
 
 export function genFormItemTemp(widget) {
   let template = `
@@ -10,7 +10,7 @@ export function genFormItemTemp(widget) {
 }
 
 function genWidgetTemp(widget, isForm = false) {
-  let widgetTemp = '';
+  let widgetTemp = "";
   let {
     arrowControl,
     clearable,
@@ -32,49 +32,49 @@ function genWidgetTemp(widget, isForm = false) {
   } = widget.options;
   const model = `${isForm ? FORM_MODEL : DATA_MODEL}.${widget.model}`;
   if (!placeholder) {
-    placeholder = '请输入';
+    placeholder = "Please enter";
   }
-  if (widget.type === 'input') {
-    let type = 'text';
+  if (widget.type === "input") {
+    let type = "text";
     if (
-      dataType === 'number' ||
-      dataType === 'integer' ||
-      dataType === 'float'
+      dataType === "number" ||
+      dataType === "integer" ||
+      dataType === "float"
     ) {
-      type = 'number';
+      type = "number";
     }
     widgetTemp += `<el-input
           type="${type}"
-          v-model${type === 'number' ? '.number' : ''}="${model}"
+          v-model${type === "number" ? ".number" : ""}="${model}"
           placeholder="${placeholder}"
           :style="{width:'${width}'}"
           :disabled="${disabled}"
         ></el-input>`;
-  } else if (widget.type === 'textarea') {
+  } else if (widget.type === "textarea") {
     widgetTemp += `<el-input
           type="textarea"
           :rows="5"
           v-model="${model}"
-          placeholder="${placeholder || ''}"
+          placeholder="${placeholder || ""}"
           :style="{width:'${width}'}"
           :disabled="${disabled}"
           ></el-input>`;
-  } else if (widget.type === 'number') {
+  } else if (widget.type === "number") {
     widgetTemp += `<el-input-number
           v-model="${model}"
-          placeholder="${placeholder || ''}"
+          placeholder="${placeholder || ""}"
           :step="${step}"
           :style="{width:'${width}'}"
           :disabled="${disabled}"
           ></el-input-number>`;
-  } else if (widget.type === 'radio') {
+  } else if (widget.type === "radio") {
     const optionArr = remote ? remoteOptions : options;
     const optionFunc = () => {
-      let optStr = '';
+      let optStr = "";
       for (const item of optionArr) {
         optStr += `
         <el-radio
-            :style="{display:'${inline ? 'inline-block' : 'block'}' }"
+            :style="{display:'${inline ? "inline-block" : "block"}' }"
             label="${item.value}"
             key="${item.value}">
             ${remote ? item.label : showLabel ? item.label : item.value}
@@ -88,14 +88,14 @@ function genWidgetTemp(widget, isForm = false) {
           :disabled="${disabled}" >
               ${optionFunc()}
       </el-radio-group>`;
-  } else if (widget.type === 'checkbox') {
+  } else if (widget.type === "checkbox") {
     const optionArr = remote ? remoteOptions : options;
     const optionFunc = () => {
-      let optStr = '';
+      let optStr = "";
       for (const item of optionArr) {
         optStr += `
         <el-checkbox
-            :style="{display:'${inline ? 'inline-block' : 'block'}' }"
+            :style="{display:'${inline ? "inline-block" : "block"}' }"
             label="${item.value}"
             key="${item.value}">
             ${remote ? item.label : showLabel ? item.label : item.value}
@@ -110,13 +110,13 @@ function genWidgetTemp(widget, isForm = false) {
           :disabled="${disabled}" >
               ${optionFunc()}
       </el-checkbox-group>`;
-  } else if (widget.type === 'time') {
+  } else if (widget.type === "time") {
     widgetTemp += `<el-time-picker
           v-model="${model}"
           :is-range="${isRange}"
-          placeholder="${placeholder || ''}"
-          start-placeholder="${widget.options.startPlaceholder || '开始时间'}"
-          end-placeholder="${widget.options.endPlaceholder || '结束时间'}"
+          placeholder="${placeholder || ""}"
+          start-placeholder="${widget.options.startPlaceholder || "开始时间"}"
+          end-placeholder="${widget.options.endPlaceholder || "结束时间"}"
           :readonly="${readonly}"
           :disabled="${disabled}"
           :editable="${editable}"
@@ -125,14 +125,14 @@ function genWidgetTemp(widget, isForm = false) {
           value-format="${format}"
           :style="{width:'${width}'}"
           ></el-time-picker>`;
-  } else if (widget.type === 'date') {
+  } else if (widget.type === "date") {
     widgetTemp += `<el-date-picker
           v-model="${model}"
           type="${type}"
           :is-range="${isRange}"
-          placeholder="${placeholder || ''}"
-          start-placeholder="${widget.options.startPlaceholder || '开始'}"
-          end-placeholder="${widget.options.endPlaceholder || '结束'}"
+          placeholder="${placeholder || ""}"
+          start-placeholder="${widget.options.startPlaceholder || "开始"}"
+          end-placeholder="${widget.options.endPlaceholder || "结束"}"
           :readonly="${readonly}"
           :disabled="${disabled}"
           :editable="${editable}"
@@ -141,25 +141,25 @@ function genWidgetTemp(widget, isForm = false) {
           value-format="${format}"
           :style="{width:'${width}'}"
           ></el-date-picker>`;
-  } else if (widget.type === 'rate') {
+  } else if (widget.type === "rate") {
     widgetTemp += `<el-rate
           :rows="5"
           v-model="${model}"
-          placeholder="${placeholder || ''}"
+          placeholder="${placeholder || ""}"
           :max="${widget.options.max}"
           :disabled="${disabled}"
           :allow-half="${widget.options.allowHalf}"
           ></el-rate>`;
-  } else if (widget.type === 'color') {
+  } else if (widget.type === "color") {
     widgetTemp += `<el-color-picker
           v-model="${model}"
           :disabled="${disabled}"
           :show-alpha="${widget.options.showAlpha}"
           ></el-color-picker>`;
-  } else if (widget.type === 'select') {
+  } else if (widget.type === "select") {
     const optionArr = remote ? remoteOptions : options;
     const optionFunc = () => {
-      let optStr = '';
+      let optStr = "";
       for (const item of optionArr) {
         optStr += `
         <el-option
@@ -173,7 +173,7 @@ function genWidgetTemp(widget, isForm = false) {
     };
     widgetTemp += `<el-select
           v-model="${model}"
-          placeholder="${placeholder || ''}"
+          placeholder="${placeholder || ""}"
           :style="{width:'${width}'}"
           :multiple="${widget.options.multiple}"
           :filterable="${widget.options.filterable}"
@@ -181,12 +181,12 @@ function genWidgetTemp(widget, isForm = false) {
           :disabled="${disabled}" >
               ${optionFunc()}
       </el-select>`;
-  } else if (widget.type === 'switch') {
+  } else if (widget.type === "switch") {
     widgetTemp += `<el-switch
           v-model="${model}"
           :disabled="${disabled}"
           ></el-switch>`;
-  } else if (widget.type === 'slider') {
+  } else if (widget.type === "slider") {
     widgetTemp += `<el-slider
         v-model="${model}"
         :disabled="${disabled}"
@@ -197,9 +197,9 @@ function genWidgetTemp(widget, isForm = false) {
         :range="${widget.options.range}"
         :style="{width:'${width}'}"></el-slider>`;
   }
-  //   高级字段
-  else if (widget.type === 'imgupload') {
-    // TODO: 自定义组件支持渲染
+  //   Advanced fields
+  else if (widget.type === "imgupload") {
+    // TODO: Custom components support rendering
     widgetTemp += `<fm-upload
         v-model="${model}"
         :disabled="${disabled}"
@@ -216,33 +216,33 @@ function genWidgetTemp(widget, isForm = false) {
         :is-edit="${widget.options.isEdit}"
         action="${widget.options.action}"
       ></fm-upload>`;
-  } else if (widget.type === 'cascader') {
-    // TODO: 自定义组件渲染
+  } else if (widget.type === "cascader") {
+    // TODO: custom component rendering
     widgetTemp += `<vue-editor
         v-model="${model}"
         :style="{width:'${width}'}""></vue-editor>`;
-  } else if (widget.type === 'cascader') {
-    // TODO: 远端数据
+  } else if (widget.type === "cascader") {
+    // TODO: remote data
     widgetTemp += ` <el-cascader
     v-model="${model}"
     :disabled="${disabled}"
     :clearable="${clearable}"
-    placeholder="${placeholder || ''}"
+    placeholder="${placeholder || ""}"
     :style="{width:'${width}'}"
     :options="${JSON.stringify(remoteOptions)}"
   ></el-cascader>`;
-  } else if (widget.type === 'text') {
+  } else if (widget.type === "text") {
     widgetTemp += `<span>{{${model}}}</span>`;
-  } else if (widget.type === 'table') {
-    // TODO: 远端数据
+  } else if (widget.type === "table") {
+    // TODO: remote data
     const columnFunc = () => {
-      let columnStr = '';
+      let columnStr = "";
       for (const item of widget.options.columns) {
         columnStr += `
         <el-table-column
             prop="${item.field}"
             label="${item.label}"
-            ${item.width ? ':style="{width:\'' + item.width + '\'}"' : ''}>
+            ${item.width ? ":style=\"{width:'" + item.width + "'}\"" : ""}>
           </el-table-column>
           `;
       }
@@ -255,8 +255,8 @@ function genWidgetTemp(widget, isForm = false) {
     :stripe="${widget.options.stripe}"
     ${
       widget.options.width
-        ? ':style="{width:\'' + widget.options.width + '\'}"'
-        : ''
+        ? ":style=\"{width:'" + widget.options.width + "'}\""
+        : ""
     }>${columnFunc()}</el-table>`;
   }
   return widgetTemp;

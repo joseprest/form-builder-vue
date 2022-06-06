@@ -144,7 +144,7 @@ export default {
       const to = evt.to;
       console.log(to);
 
-      //为拖拽到容器的元素添加唯一 key
+      //key
       const key = genUniqKey();
       this.$set(this.data.list, newIndex, {
         ...this.data.list[newIndex],
@@ -153,7 +153,6 @@ export default {
           remoteFunc: "func_" + key,
         },
         key,
-        // 绑定键值
         model: this.data.list[newIndex].type + "_" + key,
         rules: [],
       });
@@ -191,9 +190,7 @@ export default {
       const oldIndex = $event.oldIndex;
       const item = $event.item;
 
-      // 防止布局元素的嵌套拖拽
       if (item.className.indexOf("data-grid") >= 0) {
-        // 如果是列表中拖拽的元素需要还原到原来位置
         item.tagName === "DIV" &&
           this.data.list.splice(
             oldIndex,
@@ -217,7 +214,6 @@ export default {
           remoteFunc: "func_" + key,
         },
         key,
-        // 绑定键值
         model: row.columns[colIndex].list[newIndex].type + "_" + key,
         rules: [],
       });
